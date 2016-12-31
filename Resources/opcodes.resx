@@ -1,0 +1,423 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ADC" xml:space="preserve">
+    <value>ADd with Carry</value>
+  </data>
+  <data name="ADCL" xml:space="preserve">
+    <value>ADd with Carry Long</value>
+  </data>
+  <data name="AND" xml:space="preserve">
+    <value>Bitwise AND with accumulator</value>
+  </data>
+  <data name="ANDL" xml:space="preserve">
+    <value>Bitwise AND with accumulator, Long</value>
+  </data>
+  <data name="ASL" xml:space="preserve">
+    <value>ASL shifts all bits left one position. 0 is shifted into bit 0 and the original bit 7 is shifted into the Carry</value>
+  </data>
+  <data name="BCC" xml:space="preserve">
+    <value>Branch if Carry Clear</value>
+  </data>
+  <data name="BCS" xml:space="preserve">
+    <value>Branch if Carry Set</value>
+  </data>
+  <data name="BEQ" xml:space="preserve">
+    <value>Branch if EQual/Branch if zero</value>
+  </data>
+  <data name="BIT" xml:space="preserve">
+    <value>BIt Test</value>
+  </data>
+  <data name="BMI" xml:space="preserve">
+    <value>Branch if MInus value</value>
+  </data>
+  <data name="BNE" xml:space="preserve">
+    <value>Branch if Not Equal/Branch if not zero</value>
+  </data>
+  <data name="BPL" xml:space="preserve">
+    <value>Branch if PLus value</value>
+  </data>
+  <data name="BRA" xml:space="preserve">
+    <value>BRanch Always</value>
+  </data>
+  <data name="BRK" xml:space="preserve">
+    <value>Software BReaK</value>
+  </data>
+  <data name="BRL" xml:space="preserve">
+    <value>BRanch always Long</value>
+  </data>
+  <data name="BVC" xml:space="preserve">
+    <value>Branch if oVerflow Clear</value>
+  </data>
+  <data name="BVS" xml:space="preserve">
+    <value>Branch if oVerflow Set</value>
+  </data>
+  <data name="CLC" xml:space="preserve">
+    <value>CLear Carry flag</value>
+  </data>
+  <data name="CLD" xml:space="preserve">
+    <value>CLear Decimal flag</value>
+  </data>
+  <data name="CLI" xml:space="preserve">
+    <value>CLear Interrupt flag</value>
+  </data>
+  <data name="CLV" xml:space="preserve">
+    <value>CLear oVerflow flag</value>
+  </data>
+  <data name="CMP" xml:space="preserve">
+    <value>CoMPare accumulator with memory</value>
+  </data>
+  <data name="CMPL" xml:space="preserve">
+    <value>CoMPare accumulator with memory, Long</value>
+  </data>
+  <data name="COP" xml:space="preserve">
+    <value>COProcessor empowerment (interrupt)</value>
+  </data>
+  <data name="CPX" xml:space="preserve">
+    <value>ComPare X with memory</value>
+  </data>
+  <data name="CPY" xml:space="preserve">
+    <value>ComPare Y with memory</value>
+  </data>
+  <data name="DEC" xml:space="preserve">
+    <value>DECrement accumulator or memory</value>
+  </data>
+  <data name="DEX" xml:space="preserve">
+    <value>DEcrement X</value>
+  </data>
+  <data name="DEY" xml:space="preserve">
+    <value>Decrement Y</value>
+  </data>
+  <data name="EOR" xml:space="preserve">
+    <value>Exclusive OR accumulator with memory</value>
+  </data>
+  <data name="EORL" xml:space="preserve">
+    <value>Exclusive OR accumulator with memory, Long</value>
+  </data>
+  <data name="INC" xml:space="preserve">
+    <value>INCrement accumulator or memory</value>
+  </data>
+  <data name="INX" xml:space="preserve">
+    <value>INcrement X</value>
+  </data>
+  <data name="INY" xml:space="preserve">
+    <value>INcrement Y</value>
+  </data>
+  <data name="JML" xml:space="preserve">
+    <value>JuMp, Long</value>
+  </data>
+  <data name="JMP" xml:space="preserve">
+    <value>JuMP</value>
+  </data>
+  <data name="JMPL" xml:space="preserve">
+    <value>JuMP, Long</value>
+  </data>
+  <data name="JSL" xml:space="preserve">
+    <value>Jump to Subroutine, Long</value>
+  </data>
+  <data name="JSR" xml:space="preserve">
+    <value>Jump to SubRoutine</value>
+  </data>
+  <data name="LDA" xml:space="preserve">
+    <value>LoaD Accumulator</value>
+  </data>
+  <data name="LDAL" xml:space="preserve">
+    <value>LoaD Accumulator, Long</value>
+  </data>
+  <data name="LDX" xml:space="preserve">
+    <value>LoaD X register</value>
+  </data>
+  <data name="LDY" xml:space="preserve">
+    <value>LoaD Y register</value>
+  </data>
+  <data name="LSR" xml:space="preserve">
+    <value>LSR shifts all bits right one position. 0 is shifted into bit 7 and the original bit 0 is shifted into the Carry</value>
+  </data>
+  <data name="MVN" xml:space="preserve">
+    <value>Block MoVe Negative</value>
+  </data>
+  <data name="MVP" xml:space="preserve">
+    <value>Block MoVe Positive</value>
+  </data>
+  <data name="NOP" xml:space="preserve">
+    <value>No OPeration</value>
+  </data>
+  <data name="ORA" xml:space="preserve">
+    <value>Bitwise OR Accumulator with memory</value>
+  </data>
+  <data name="ORAL" xml:space="preserve">
+    <value>Bitwise OR Accumulator with memory, Long</value>
+  </data>
+  <data name="PEA" xml:space="preserve">
+    <value>Push Effective Address</value>
+  </data>
+  <data name="PEI" xml:space="preserve">
+    <value>Push Effective Indirect address</value>
+  </data>
+  <data name="PER" xml:space="preserve">
+    <value>Push program countEr Relative</value>
+  </data>
+  <data name="PHA" xml:space="preserve">
+    <value>PusH Accumulator</value>
+  </data>
+  <data name="PHB" xml:space="preserve">
+    <value>PusH data Bank register</value>
+  </data>
+  <data name="PHD" xml:space="preserve">
+    <value>PusH Direct page register</value>
+  </data>
+  <data name="PHK" xml:space="preserve">
+    <value>PusH program banK register</value>
+  </data>
+  <data name="PHP" xml:space="preserve">
+    <value>PusH Processor status flags</value>
+  </data>
+  <data name="PHX" xml:space="preserve">
+    <value>PusH X</value>
+  </data>
+  <data name="PHY" xml:space="preserve">
+    <value>PusH Y</value>
+  </data>
+  <data name="PLA" xml:space="preserve">
+    <value>Pull Accumulator</value>
+  </data>
+  <data name="PLB" xml:space="preserve">
+    <value>Pull data Bank register</value>
+  </data>
+  <data name="PLD" xml:space="preserve">
+    <value>Pull Direct page register</value>
+  </data>
+  <data name="PLP" xml:space="preserve">
+    <value>Pull Processor status flags</value>
+  </data>
+  <data name="PLX" xml:space="preserve">
+    <value>Pull X</value>
+  </data>
+  <data name="PLY" xml:space="preserve">
+    <value>Pull Y</value>
+  </data>
+  <data name="REP" xml:space="preserve">
+    <value>REset Processor status flag</value>
+  </data>
+  <data name="ROL" xml:space="preserve">
+    <value>ROtate Left accumulator or memory</value>
+  </data>
+  <data name="ROR" xml:space="preserve">
+    <value>ROtate Right accumulator or memory</value>
+  </data>
+  <data name="RTI" xml:space="preserve">
+    <value>ReTurn from Interrupt</value>
+  </data>
+  <data name="RTL" xml:space="preserve">
+    <value>ReTurn from subroutine, Long</value>
+  </data>
+  <data name="RTS" xml:space="preserve">
+    <value>ReTurn from Subroutine; pulls the top two bytes off the stack (low byte first) and transfers program control to that address+1</value>
+  </data>
+  <data name="SBC" xml:space="preserve">
+    <value>SuBtract with Carry</value>
+  </data>
+  <data name="SBCL" xml:space="preserve">
+    <value>SuBtract with Carry Long</value>
+  </data>
+  <data name="SEC" xml:space="preserve">
+    <value>SEt Carry flag</value>
+  </data>
+  <data name="SED" xml:space="preserve">
+    <value>SEt Decimal flag</value>
+  </data>
+  <data name="SEI" xml:space="preserve">
+    <value>SEt Interrupt flag</value>
+  </data>
+  <data name="SEP" xml:space="preserve">
+    <value>SEt Processor status flag</value>
+  </data>
+  <data name="STA" xml:space="preserve">
+    <value>STore Accumulator to memory</value>
+  </data>
+  <data name="STAL" xml:space="preserve">
+    <value>STore Accumulator to memory, Long</value>
+  </data>
+  <data name="STP" xml:space="preserve">
+    <value>SToP the clock</value>
+  </data>
+  <data name="STX" xml:space="preserve">
+    <value>STore X to memory</value>
+  </data>
+  <data name="STY" xml:space="preserve">
+    <value>STore Y to memory</value>
+  </data>
+  <data name="STZ" xml:space="preserve">
+    <value>STore Zero to memory</value>
+  </data>
+  <data name="TAX" xml:space="preserve">
+    <value>Transfer Accumulator to X</value>
+  </data>
+  <data name="TAY" xml:space="preserve">
+    <value>Transfer Accumulator to Y</value>
+  </data>
+  <data name="TCD" xml:space="preserve">
+    <value>Transfer aCcumulator to Direct page</value>
+  </data>
+  <data name="TCS" xml:space="preserve">
+    <value>Transfer aCcumulator to Stack page</value>
+  </data>
+  <data name="TDC" xml:space="preserve">
+    <value>Transfer Direct page to aCcumulator</value>
+  </data>
+  <data name="TRB" xml:space="preserve">
+    <value>Test and Reset Bit</value>
+  </data>
+  <data name="TSB" xml:space="preserve">
+    <value>Test and Set Bit</value>
+  </data>
+  <data name="TSC" xml:space="preserve">
+    <value>Transfer Stack pointer to aCcumulator</value>
+  </data>
+  <data name="TSX" xml:space="preserve">
+    <value>Transfer Stack pointer to X</value>
+  </data>
+  <data name="TXA" xml:space="preserve">
+    <value>Transfer X to Accumulator</value>
+  </data>
+  <data name="TXS" xml:space="preserve">
+    <value>Transfer X to Stack pointer</value>
+  </data>
+  <data name="TXY" xml:space="preserve">
+    <value>Transfer X to Y</value>
+  </data>
+  <data name="TYA" xml:space="preserve">
+    <value>Transfer Y to Accumulator</value>
+  </data>
+  <data name="TYX" xml:space="preserve">
+    <value>Transfer Y to X</value>
+  </data>
+  <data name="WAI" xml:space="preserve">
+    <value>WAIt for interrupt</value>
+  </data>
+  <data name="WDM" xml:space="preserve">
+    <value>Reserved for future use, it performs no operation</value>
+  </data>
+  <data name="XBA" xml:space="preserve">
+    <value>EXchange low and high byte of the Accumulator</value>
+  </data>
+  <data name="XCE" xml:space="preserve">
+    <value>EXchange Carry and Emulation</value>
+  </data>
+</root>
