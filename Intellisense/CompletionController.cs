@@ -120,7 +120,7 @@ namespace VSMerlin32
                         m_session.Commit();
                         this.m_textView.Caret.MoveTo(CaretBeforeCommit.Position.BufferPosition - 1);
                     }
-                    else
+                    else if (!m_session.IsDismissed)
                     {
                         m_session.Filter();
                     }
@@ -158,9 +158,28 @@ namespace VSMerlin32
                 caretPoint.Value.Snapshot.CreateTrackingPoint(caretPoint.Value.Position, PointTrackingMode.Positive),
                 true);
 
-            //subscribe to the Dismissed event on the session 
-            m_session.Dismissed += this.OnSessionDismissed;
-            m_session.Start();
+            // We need to check now whether we are in a comment or not, because if we are, we don't want to provide a completion list to the user
+            ITextSnapshot snapshot = caretPoint.Value.Snapshot;
+            var triggerPoint = (SnapshotPoint)m_session.GetTriggerPoint(snapshot);
+            var snapshotSpan = new SnapshotSpan(triggerPoint, 0);
+            foreach (VSMerlin32.Coloring.Data.SnapshotHelper item in VSMerlin32.Coloring.Merlin32CodeHelper.GetTokens(snapshotSpan))
+            {
+                if (item.Snapshot.IntersectsWith(snapshotSpan))
+                {
+                    if (item.TokenType == Merlin32TokenTypes.Merlin32Comment)
+                    {
+                        m_session.Dismiss();
+                        break;
+                    }
+                }
+            }
+
+            if (!m_session.IsDismissed)
+            {
+                //subscribe to the Dismissed event on the session 
+                m_session.Dismissed += this.OnSessionDismissed;
+                m_session.Start();
+            }
 
             return true;
         }

@@ -52,49 +52,24 @@ namespace VSMerlin32
             else
             {
                 // If the user has been typing lowercase, we'll present a lowercase list of keywords/opcodes...
-                if (char.IsLower(chTyped))
+                foreach (Merlin32Opcodes token in Enum.GetValues(typeof(Merlin32Opcodes)))
                 {
-                    foreach (Merlin32Opcodes token in Enum.GetValues(typeof(Merlin32Opcodes)))
+                    strList.Add(char.IsLower(chTyped)? token.ToString().ToLower() : token.ToString());
+                }
+                foreach (Merlin32Directives token in Enum.GetValues(typeof(Merlin32Directives)))
+                {
+                    if ((token.ToString().ToLower() == Merlin32Directives.ELUP.ToString().ToLower()) || (token.ToString() == Merlin32Directives.ELUP.ToString()))
                     {
-                        strList.Add(token.ToString().ToLower());
+                        strList.Add(Resources.directives.ELUPValue);
                     }
-                    foreach (Merlin32Directives token in Enum.GetValues(typeof(Merlin32Directives)))
+                    else
                     {
-                        if (token.ToString().ToLower() == Merlin32Directives.ELUP.ToString().ToLower())
-                        {
-                            strList.Add(Resources.directives.ELUPValue);
-                        }
-                        else
-                        {
-                            strList.Add(token.ToString().ToLower());
-                        }
-                    }
-                    foreach (Merlin32DataDefines token in Enum.GetValues(typeof(Merlin32DataDefines)))
-                    {
-                        strList.Add(token.ToString().ToLower());
+                        strList.Add(char.IsLower(chTyped)? token.ToString().ToLower() : token.ToString());
                     }
                 }
-                else
+                foreach (Merlin32DataDefines token in Enum.GetValues(typeof(Merlin32DataDefines)))
                 {
-                    foreach (Merlin32Opcodes token in Enum.GetValues(typeof(Merlin32Opcodes)))
-                    {
-                        strList.Add(token.ToString());
-                    }
-                    foreach (Merlin32Directives token in Enum.GetValues(typeof(Merlin32Directives)))
-                    {
-                        if (token.ToString() == Merlin32Directives.ELUP.ToString())
-                        {
-                            strList.Add(Resources.directives.ELUPValue);
-                        }
-                        else
-                        {
-                            strList.Add(token.ToString());
-                        }
-                    }
-                    foreach (Merlin32DataDefines token in Enum.GetValues(typeof(Merlin32DataDefines)))
-                    {
-                        strList.Add(token.ToString());
-                    }
+                    strList.Add(char.IsLower(chTyped)? token.ToString().ToLower() : token.ToString());
                 }
 
                 // OG We also need to replace "ELUP" with "--^"
@@ -106,23 +81,6 @@ namespace VSMerlin32
             m_compList = new List<Completion>();
             foreach (string str in strList)
                 m_compList.Add(new Completion(str, str, str, null, null));
-            /*
-            ITextSnapshot snapshot = _buffer.CurrentSnapshot;
-            var triggerPoint = (SnapshotPoint)session.GetTriggerPoint(snapshot);
-
-            if (triggerPoint == null)
-                return;
-
-            var line = triggerPoint.GetContainingLine();
-            SnapshotPoint start = triggerPoint;
-
-            while (start > line.Start && !char.IsWhiteSpace((start - 1).GetChar()))
-            {
-                start -= 1;
-            }
-
-            var applicableTo = snapshot.CreateTrackingSpan(new SnapshotSpan(start, triggerPoint), SpanTrackingMode.EdgeInclusive);
-            */
 
             completionSets.Add(new CompletionSet("All", "All", FindTokenSpanAtPosition(session.GetTriggerPoint(m_buffer), session), m_compList, null));
         }
