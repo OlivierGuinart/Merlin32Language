@@ -151,7 +151,7 @@ namespace VSMerlin32.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to (--\^).
+        ///   Looks up a localized string similar to (^|\s)(?&lt;ELUP&gt;--\^)(\s|$).
         /// </summary>
         internal static string ELUPRegex {
             get {

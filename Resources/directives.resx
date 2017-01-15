@@ -148,7 +148,7 @@
     <value>End of LUP</value>
   </data>
   <data name="ELUPRegex" xml:space="preserve">
-    <value>(--\^)</value>
+    <value>(^|\s)(?&lt;ELUP&gt;--\^)(\s|$)</value>
   </data>
   <data name="ELUPValue" xml:space="preserve">
     <value>--^</value>
