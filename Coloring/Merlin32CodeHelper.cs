@@ -8,18 +8,18 @@ namespace VSMerlin32.Coloring
 {
     internal class Merlin32CodeHelper
     {
-        const string CommentRegex = @"((\u003B)|(\u002A))(.*)"; // ;
-        const string TextRegex = @"(""|')[^']*(""|')";
+        private static readonly string CommentRegex = @"((\u003B)|(\u002A))(.*)"; // ;
+        private static readonly string TextRegex = @"(""|')[^']*(""|')";
         // OPCODE_REG and below are initialized dynamically below.
-        const string RegexBoilerplate = @"(\b|\s)(?<{0}>{1})(\b|\s)";
-        const string Opcode = "OPCODE";
-        const string Data = "DATA";
-        const string Directive = "DIRECTIVE";
-        const string Elup = "ELUP";
-        static string OpcodeRegex = "";
-        static string DirectiveRegex = "";
-        static string DataRegex = "";
-        
+        private static readonly string RegexBoilerplate = @"(\b|\s)(?<{0}>{1})(\b|\s)";
+        private static readonly string Opcode = "OPCODE";
+        private static readonly string Data = "DATA";
+        private static readonly string Directive = "DIRECTIVE";
+        private static readonly string Elup = "ELUP";
+        private static string _opcodeRegex = "";
+        private static string _directiveRegex = "";
+        private static string _dataRegex = "";
+
         public static IEnumerable<SnapshotHelper> GetTokens(SnapshotSpan span)
         {
             string TempRegex; // temp var string
@@ -47,13 +47,13 @@ namespace VSMerlin32.Coloring
             TempRegex = "";
             foreach (Merlin32Opcodes token in Enum.GetValues(typeof(Merlin32Opcodes)))
             {
-                TempRegex += (token.ToString() + ("|"));
+                TempRegex += token.ToString() + ("|");
             }
             // we remove the last "|" added
-            TempRegex = TempRegex.Remove(TempRegex.LastIndexOf("|"));
-            OpcodeRegex = string.Format(RegexBoilerplate, Opcode, TempRegex);
+            TempRegex = TempRegex.Remove(TempRegex.LastIndexOf("|", StringComparison.Ordinal));
+            _opcodeRegex = string.Format(RegexBoilerplate, Opcode, TempRegex);
 
-            reg = new Regex(OpcodeRegex,RegexOptions.IgnoreCase);
+            reg = new Regex(_opcodeRegex,RegexOptions.IgnoreCase);
             Match opcodeMatch = reg.Match(formattedLine);
             if (opcodeMatch.Success)
             {
@@ -68,21 +68,21 @@ namespace VSMerlin32.Coloring
             // OG NEW
             // DIRECTIVES
             TempRegex = "";
-            string ElupDirective = Resources.directives.ELUP;
+            string elupDirective = Resources.directives.ELUP;
             foreach (Merlin32Directives token in Enum.GetValues(typeof(Merlin32Directives)))
             {
-                if (token.ToString() != ElupDirective)
-                    TempRegex += (token.ToString() + ("|"));
+                if (token.ToString() != elupDirective)
+                    TempRegex += token.ToString() + ("|");
             }
             // we remove the last "|" added
-            TempRegex = TempRegex.Remove(TempRegex.LastIndexOf("|"));
-            DirectiveRegex = string.Format(RegexBoilerplate, Directive, TempRegex); 
-            
-            reg = new Regex(DirectiveRegex, RegexOptions.IgnoreCase);
-            Match DirectiveMatch = reg.Match(formattedLine);
-            if (DirectiveMatch.Success)
+            TempRegex = TempRegex.Remove(TempRegex.LastIndexOf("|", StringComparison.Ordinal));
+            _directiveRegex = string.Format(RegexBoilerplate, Directive, TempRegex);
+
+            reg = new Regex(_directiveRegex, RegexOptions.IgnoreCase);
+            Match directiveMatch = reg.Match(formattedLine);
+            if (directiveMatch.Success)
             {
-                foreach (Capture directive in DirectiveMatch.Groups[Directive].Captures)
+                foreach (Capture directive in directiveMatch.Groups[Directive].Captures)
                 {
                     if (directive.Index < commentMatch)
                         yield return new SnapshotHelper(new SnapshotSpan(new SnapshotPoint(span.Snapshot, directive.Index + curLoc), directive.Length), Merlin32TokenTypes.Merlin32Directive);
@@ -91,10 +91,10 @@ namespace VSMerlin32.Coloring
 
             // We also need to check for special ELUP directive...
             reg = new Regex(Resources.directives.ELUPRegex);
-            Match ElupMatch = reg.Match(formattedLine);
-            if (ElupMatch.Success)
+            Match elupMatch = reg.Match(formattedLine);
+            if (elupMatch.Success)
             {
-                foreach (Capture elup in ElupMatch.Groups[Elup].Captures)
+                foreach (Capture elup in elupMatch.Groups[Elup].Captures)
                 {
                     if (elup.Index < commentMatch)
                         yield return new SnapshotHelper(new SnapshotSpan(new SnapshotPoint(span.Snapshot, elup.Index + curLoc), elup.Length), Merlin32TokenTypes.Merlin32Directive);
@@ -106,13 +106,13 @@ namespace VSMerlin32.Coloring
             TempRegex = "";
             foreach (Merlin32DataDefines token in Enum.GetValues(typeof(Merlin32DataDefines)))
             {
-                TempRegex += (token.ToString() + ("|"));
+                TempRegex += token.ToString() + ("|");
             }
             // we remove the last "|" added
-            TempRegex = TempRegex.Remove(TempRegex.LastIndexOf("|"));
-            DataRegex = string.Format(RegexBoilerplate, Data, TempRegex);
+            TempRegex = TempRegex.Remove(TempRegex.LastIndexOf("|", StringComparison.Ordinal));
+            _dataRegex = string.Format(RegexBoilerplate, Data, TempRegex);
 
-            reg = new Regex(DataRegex, RegexOptions.IgnoreCase);
+            reg = new Regex(_dataRegex, RegexOptions.IgnoreCase);
             Match dataMatch = reg.Match(formattedLine);
             if (dataMatch.Success)
             {

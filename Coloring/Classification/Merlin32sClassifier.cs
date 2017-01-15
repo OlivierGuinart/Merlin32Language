@@ -13,7 +13,6 @@ namespace VSMerlin32.Coloring.Classification
     [TagType(typeof(ClassificationTag))]
     internal sealed class Merlin32ClassifierProvider : ITaggerProvider
     {
-
         [Export]
         [Name("Merlin32")]
         [BaseDefinition("code")]
@@ -28,34 +27,33 @@ namespace VSMerlin32.Coloring.Classification
         internal IClassificationTypeRegistryService ClassificationTypeRegistry = null;
 
         [Import]
-        internal IBufferTagAggregatorFactoryService aggregatorFactory = null;
+        internal IBufferTagAggregatorFactoryService AggregatorFactory = null;
 
         public ITagger<T> CreateTagger<T>(ITextBuffer buffer) where T : ITag
         {
+            ITagAggregator<Merlin32TokenTag> merlin32TagAggregator =
+                                            AggregatorFactory.CreateTagAggregator<Merlin32TokenTag>(buffer);
 
-            ITagAggregator<Merlin32TokenTag> Merlin32TagAggregator =
-                                            aggregatorFactory.CreateTagAggregator<Merlin32TokenTag>(buffer);
-
-            return new Merlin32Classifier(buffer, Merlin32TagAggregator, ClassificationTypeRegistry) as ITagger<T>;
+            return new Merlin32Classifier(buffer, merlin32TagAggregator, ClassificationTypeRegistry) as ITagger<T>;
         }
     }
 
     internal sealed class Merlin32Classifier : ITagger<ClassificationTag>
     {
-        ITextBuffer _buffer;
-        ITagAggregator<Merlin32TokenTag> _aggregator;
-        IDictionary<Merlin32TokenTypes, IClassificationType> _Merlin32Types;
+        private ITextBuffer _buffer;
+        private readonly ITagAggregator<Merlin32TokenTag> _aggregator;
+        private readonly IDictionary<Merlin32TokenTypes, IClassificationType> _merlin32Types;
 
         internal Merlin32Classifier(ITextBuffer buffer,
-                               ITagAggregator<Merlin32TokenTag> Merlin32TagAggregator,
+                               ITagAggregator<Merlin32TokenTag> merlin32TagAggregator,
                                IClassificationTypeRegistryService typeService)
         {
             _buffer = buffer;
-            _aggregator = Merlin32TagAggregator;
-            _Merlin32Types = new Dictionary<Merlin32TokenTypes, IClassificationType>();
+            _aggregator = merlin32TagAggregator;
+            _merlin32Types = new Dictionary<Merlin32TokenTypes, IClassificationType>();
 
             foreach (Merlin32TokenTypes token in Enum.GetValues(typeof(Merlin32TokenTypes)))
-                _Merlin32Types[token] = typeService.GetClassificationType(token.ToString());
+                _merlin32Types[token] = typeService.GetClassificationType(token.ToString());
         }
 
         public event EventHandler<SnapshotSpanEventArgs> TagsChanged
@@ -66,13 +64,11 @@ namespace VSMerlin32.Coloring.Classification
 
         public IEnumerable<ITagSpan<ClassificationTag>> GetTags(NormalizedSnapshotSpanCollection spans)
         {
-
-            foreach (var tagSpan in this._aggregator.GetTags(spans))
+            foreach (var tagSpan in _aggregator.GetTags(spans))
             {
                 var tagSpans = tagSpan.Span.GetSpans(spans[0].Snapshot);
-                yield return 
-                    new TagSpan<ClassificationTag>(tagSpans[0], 
-                        new ClassificationTag(_Merlin32Types[tagSpan.Tag.Tokentype]));
+                yield return
+                    new TagSpan<ClassificationTag>(tagSpans[0], new ClassificationTag(_merlin32Types[tagSpan.Tag.Tokentype]));
             }
         }
     }
