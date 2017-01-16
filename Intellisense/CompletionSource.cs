@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.ComponentModel.Composition;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
@@ -26,20 +24,20 @@ namespace VSMerlin32
 
     internal class Merlin32CompletionSource : ICompletionSource
     {
-        private Merlin32CompletionSourceProvider m_sourceprovider;
-        private ITextBuffer m_buffer;
-        private List<Completion> m_compList;
-        private bool m_isDisposed = false;
+        private Merlin32CompletionSourceProvider _sourceprovider;
+        private ITextBuffer _buffer;
+        private List<Completion> _compList;
+        private bool _isDisposed;
 
         public Merlin32CompletionSource(Merlin32CompletionSourceProvider sourceprovider, ITextBuffer buffer)
         {
-            m_sourceprovider = sourceprovider;
-            m_buffer = buffer;
+            _sourceprovider = sourceprovider;
+            _buffer = buffer;
         }
 
         public void AugmentCompletionSession(ICompletionSession session, IList<CompletionSet> completionSets)
         {
-            if (m_isDisposed)
+            if (_isDisposed)
                 throw new ObjectDisposedException("Merlin32CompletionSource");
 
             List<string> strList = new List<string>();
@@ -78,27 +76,27 @@ namespace VSMerlin32
                 // strList[strList.IndexOf(Merlin32Directives.ELUP.ToString())] = "--^";
                 // OG
             }
-            m_compList = new List<Completion>();
+            _compList = new List<Completion>();
             foreach (string str in strList)
-                m_compList.Add(new Completion(str, str, str, null, null));
+                _compList.Add(new Completion(str, str, str, null, null));
 
-            completionSets.Add(new CompletionSet("All", "All", FindTokenSpanAtPosition(session.GetTriggerPoint(m_buffer), session), m_compList, null));
+            completionSets.Add(new CompletionSet("All", "All", FindTokenSpanAtPosition(session), _compList, null));
         }
 
-        private ITrackingSpan FindTokenSpanAtPosition(ITrackingPoint point, ICompletionSession session)
+        private ITrackingSpan FindTokenSpanAtPosition(ICompletionSession session)
         {
             SnapshotPoint currentPoint = (session.TextView.Caret.Position.BufferPosition) - 1;
-            ITextStructureNavigator navigator = m_sourceprovider.NavigatorService.GetTextStructureNavigator(m_buffer);
+            ITextStructureNavigator navigator = _sourceprovider.NavigatorService.GetTextStructureNavigator(_buffer);
             TextExtent extent = navigator.GetExtentOfWord(currentPoint);
             return currentPoint.Snapshot.CreateTrackingSpan(extent.Span, SpanTrackingMode.EdgeInclusive);
         }
 
         public void Dispose()
         {
-            if (!m_isDisposed)
+            if (!_isDisposed)
             {
                 GC.SuppressFinalize(this);
-                m_isDisposed = true;
+                _isDisposed = true;
             }
         }
     }

@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Microsoft.VisualStudio.Language.Intellisense;
-using System.Collections.ObjectModel;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Tagging;
 using System.ComponentModel.Composition;
@@ -12,19 +10,17 @@ using VSMerlin32.Coloring;
 
 namespace VSMerlin32
 {
-    
     [Export(typeof(IQuickInfoSourceProvider))]
     [ContentType("Merlin32")]
     [Name("Merlin32QuickInfo")]
     class Merlin32QuickInfoSourceProvider : IQuickInfoSourceProvider
     {
-
         [Import]
-        IBufferTagAggregatorFactoryService aggService = null;
+        private IBufferTagAggregatorFactoryService _aggService = null;
 
         public IQuickInfoSource TryCreateQuickInfoSource(ITextBuffer textBuffer)
         {
-            return new Merlin32QuickInfoSource(textBuffer, aggService.CreateTagAggregator<Merlin32TokenTag>(textBuffer));
+            return new Merlin32QuickInfoSource(textBuffer, _aggService.CreateTagAggregator<Merlin32TokenTag>(textBuffer));
         }
     }
 
@@ -33,8 +29,7 @@ namespace VSMerlin32
         private ITagAggregator<Merlin32TokenTag> _aggregator;
         private ITextBuffer _buffer;
         private Merlin32KeywordsHelper _Merlin32OpcodesHelper = new Merlin32KeywordsHelper();
-        private bool _disposed = false;
-
+        private bool _disposed;
 
         public Merlin32QuickInfoSource(ITextBuffer buffer, ITagAggregator<Merlin32TokenTag> aggregator)
         {

@@ -15,7 +15,6 @@ using Microsoft.VisualStudio.Utilities;
 
 using Microsoft.VisualStudio.Text.Operations;
 
-
 namespace VSMerlin32
 {
     #region Command Filter
@@ -39,37 +38,37 @@ namespace VSMerlin32
             if (textView == null)
                 return;
 
-            Func<CommandFilter> createCommandHandler = delegate() { return new CommandFilter(textViewAdapter, textView, this); };
+            Func<CommandFilter> createCommandHandler = delegate { return new CommandFilter(textViewAdapter, textView, this); };
             textView.Properties.GetOrCreateSingletonProperty(createCommandHandler);
         }
     }
 
     internal sealed class CommandFilter : IOleCommandTarget
     {
-        private IOleCommandTarget m_nextCommandHandler;
-        private ITextView m_textView;
-        private VsTextViewCreationListener m_provider;
-        private ICompletionSession m_session;
+        private IOleCommandTarget _nextCommandHandler;
+        private ITextView _textView;
+        private VsTextViewCreationListener _provider;
+        private ICompletionSession _session;
 
         internal CommandFilter(IVsTextView textViewAdapter, ITextView textView, VsTextViewCreationListener provider)
         {
-            this.m_textView = textView;
-            this.m_provider = provider;
+            _textView = textView;
+            _provider = provider;
 
             //add the command to the command chain
-            textViewAdapter.AddCommandFilter(this, out m_nextCommandHandler);
+            textViewAdapter.AddCommandFilter(this, out _nextCommandHandler);
         }
 
         public int QueryStatus(ref Guid pguidCmdGroup, uint cCmds, OLECMD[] prgCmds, IntPtr pCmdText)
         {
-            return m_nextCommandHandler.QueryStatus(ref pguidCmdGroup, cCmds, prgCmds, pCmdText);
+            return _nextCommandHandler.QueryStatus(ref pguidCmdGroup, cCmds, prgCmds, pCmdText);
         }
 
         public int Exec(ref Guid pguidCmdGroup, uint nCmdID, uint nCmdexecopt, IntPtr pvaIn, IntPtr pvaOut)
         {
-            if (VsShellUtilities.IsInAutomationFunction(m_provider.ServiceProvider))
+            if (VsShellUtilities.IsInAutomationFunction(_provider.ServiceProvider))
             {
-                return m_nextCommandHandler.Exec(ref pguidCmdGroup, nCmdID, nCmdexecopt, pvaIn, pvaOut);
+                return _nextCommandHandler.Exec(ref pguidCmdGroup, nCmdID, nCmdexecopt, pvaIn, pvaOut);
             }
             //make a copy of this so we can look at it after forwarding some commands 
             uint commandID = nCmdID;
@@ -87,55 +86,56 @@ namespace VSMerlin32
                 || char.IsPunctuation(typedChar))
             {
                 //check for a a selection 
-                if (m_session != null && !m_session.IsDismissed)
+                if (_session != null && !_session.IsDismissed)
                 {
                     //if the selection is fully selected, commit the current session 
-                    if (m_session.SelectedCompletionSet.SelectionStatus.IsSelected)
+                    if (_session.SelectedCompletionSet.SelectionStatus.IsSelected)
                     {
-                        m_session.Commit();
+                        _session.Commit();
                         //also, don't add the character to the buffer 
                         return VSConstants.S_OK;
                     }
                     else
                     {
                         //if there is no selection, dismiss the session
-                        m_session.Dismiss();
+                        _session.Dismiss();
                     }
                 }
             }
 
             //pass along the command so the char is added to the buffer 
-            int retVal = m_nextCommandHandler.Exec(ref pguidCmdGroup, nCmdID, nCmdexecopt, pvaIn, pvaOut);
+            int retVal = _nextCommandHandler.Exec(ref pguidCmdGroup, nCmdID, nCmdexecopt, pvaIn, pvaOut);
             bool handled = false;
-            if (!typedChar.Equals(char.MinValue) && ((char.IsLetterOrDigit(typedChar)) || ((typedChar == '\'') || (typedChar == '"'))))
+            // Test for '-' is to catch ELUP (--^)
+            if (!typedChar.Equals(char.MinValue) && ((char.IsLetterOrDigit(typedChar)) || ((typedChar == '\'') || (typedChar == '"') || (typedChar == '-'))))
             {
-                if (m_session == null || m_session.IsDismissed) // If there is no active session, bring up completion
+                if (_session == null || _session.IsDismissed) // If there is no active session, bring up completion
                 {
-                    this.TriggerCompletion();
+                    TriggerCompletion();
                     // No need to filter for single and double-quotes, the choice IS the characted, just doubled, and already populated in a single completionset if we're here...
                     if ((typedChar == '\'') || (typedChar == '"'))
                     {
                         // We need to save the currect caret position because we'll position it in between the single/double quotes after the commit...
-                        ITextCaret CaretBeforeCommit = m_session.TextView.Caret;
-                        m_session.Commit();
-                        this.m_textView.Caret.MoveTo(CaretBeforeCommit.Position.BufferPosition - 1);
+                        ITextCaret caretBeforeCommit = _session.TextView.Caret;
+                        _session.Commit();
+                        _textView.Caret.MoveTo(caretBeforeCommit.Position.BufferPosition - 1);
                     }
-                    else if (!m_session.IsDismissed)
+                    else if (!_session.IsDismissed)
                     {
-                        m_session.Filter();
+                        _session.Filter();
                     }
                 }
                 else     //the completion session is already active, so just filter
                 {
-                    m_session.Filter();
+                    _session.Filter();
                 }
                 handled = true;
             }
             else if (commandID == (uint)VSConstants.VSStd2KCmdID.BACKSPACE   //redo the filter if there is a deletion
                 || commandID == (uint)VSConstants.VSStd2KCmdID.DELETE)
             {
-                if (m_session != null && !m_session.IsDismissed)
-                    m_session.Filter();
+                if (_session != null && !_session.IsDismissed)
+                    _session.Filter();
                 handled = true;
             }
 
@@ -147,20 +147,20 @@ namespace VSMerlin32
         {
             //the caret must be in a non-projection location 
             SnapshotPoint? caretPoint =
-            m_textView.Caret.Position.Point.GetPoint(
+            _textView.Caret.Position.Point.GetPoint(
             textBuffer => (!textBuffer.ContentType.IsOfType("projection")), PositionAffinity.Predecessor);
             if (!caretPoint.HasValue)
             {
                 return false;
             }
 
-            m_session = m_provider.CompletionBroker.CreateCompletionSession(m_textView,
+            _session = _provider.CompletionBroker.CreateCompletionSession(_textView,
                 caretPoint.Value.Snapshot.CreateTrackingPoint(caretPoint.Value.Position, PointTrackingMode.Positive),
                 true);
 
             // We need to check now whether we are in a comment or not, because if we are, we don't want to provide a completion list to the user
             ITextSnapshot snapshot = caretPoint.Value.Snapshot;
-            var triggerPoint = (SnapshotPoint)m_session.GetTriggerPoint(snapshot);
+            var triggerPoint = (SnapshotPoint)_session.GetTriggerPoint(snapshot);
             var snapshotSpan = new SnapshotSpan(triggerPoint, 0);
             foreach (VSMerlin32.Coloring.Data.SnapshotHelper item in VSMerlin32.Coloring.Merlin32CodeHelper.GetTokens(snapshotSpan))
             {
@@ -168,17 +168,17 @@ namespace VSMerlin32
                 {
                     if (item.TokenType == Merlin32TokenTypes.Merlin32Comment)
                     {
-                        m_session.Dismiss();
+                        _session.Dismiss();
                         break;
                     }
                 }
             }
 
-            if (!m_session.IsDismissed)
+            if (!_session.IsDismissed)
             {
                 //subscribe to the Dismissed event on the session 
-                m_session.Dismissed += this.OnSessionDismissed;
-                m_session.Start();
+                _session.Dismissed += OnSessionDismissed;
+                _session.Start();
             }
 
             return true;
@@ -186,8 +186,8 @@ namespace VSMerlin32
 
         private void OnSessionDismissed(object sender, EventArgs e)
         {
-            m_session.Dismissed -= this.OnSessionDismissed;
-            m_session = null;
+            _session.Dismissed -= OnSessionDismissed;
+            _session = null;
         }
     }
 

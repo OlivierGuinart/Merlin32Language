@@ -10,20 +10,18 @@ using VSMerlin32.Coloring.Data;
 
 namespace VSMerlin32.Coloring
 {
-
     [Export(typeof(ITaggerProvider))]
     [ContentType("Merlin32")]
     [TagType(typeof(Merlin32TokenTag))]
     internal sealed class Merlin32TokenTagProvider : ITaggerProvider
     {
-
         public ITagger<T> CreateTagger<T>(ITextBuffer buffer) where T : ITag
         {
             return new Merlin32TokenTagger(buffer) as ITagger<T>;
         }
     }
 
-    public class Merlin32TokenTag : ITag 
+    public class Merlin32TokenTag : ITag
     {
         public Merlin32TokenTypes Tokentype { get; private set; }
 
@@ -35,17 +33,16 @@ namespace VSMerlin32.Coloring
 
     internal sealed class Merlin32TokenTagger : ITagger<Merlin32TokenTag>
     {
-
-        ITextBuffer _buffer;
-        IDictionary<string, Merlin32TokenTypes> _Merlin32Types;
+        private ITextBuffer _buffer;
+        private readonly IDictionary<string, Merlin32TokenTypes> _merlin32Types;
 
         internal Merlin32TokenTagger(ITextBuffer buffer)
         {
             _buffer = buffer;
-            _Merlin32Types = new Dictionary<string, Merlin32TokenTypes>();
+            _merlin32Types = new Dictionary<string, Merlin32TokenTypes>();
 
             foreach (Merlin32TokenTypes token in Enum.GetValues(typeof(Merlin32TokenTypes)))
-                _Merlin32Types.Add(token.ToString(), token);
+                _merlin32Types.Add(token.ToString(), token);
         }
 
         public event EventHandler<SnapshotSpanEventArgs> TagsChanged
@@ -61,14 +58,15 @@ namespace VSMerlin32.Coloring
             {
                 ITextSnapshotLine containingLine = curSpan.Start.GetContainingLine();
                 int curLoc = containingLine.Start.Position;
-                
+
                 string formattedLine = containingLine.GetText();
 
                 foreach (SnapshotHelper item in Merlin32CodeHelper.GetTokens(curSpan))
                 {
                     if (item.Snapshot.IntersectsWith(curSpan))
-                        yield return new TagSpan<Merlin32TokenTag>(item.Snapshot, 
-                            new Merlin32TokenTag(item.TokenType));
+                    {
+                        yield return new TagSpan<Merlin32TokenTag>(item.Snapshot, new Merlin32TokenTag(item.TokenType));
+                    }
                 }
 
                 //add an extra char location because of the space

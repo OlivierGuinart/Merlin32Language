@@ -8,29 +8,34 @@ namespace VSMerlin32.Coloring
 {
     internal class Merlin32CodeHelper
     {
-        const string COMMENT_REG = @"((\u003B)|(\u002A))(.*)"; // ;
-        const string TEXT_REG = @"(""|')[^']*(""|')";
-        // OPCODE_REG is initialized dynamically below.
-        static string OPCODE_REG = "";
-        static string DIRECTIVE_REG = "";
-        static string DATADEFINE_REG = "";
-        
+        private static readonly string CommentRegex = @"((\u003B)|(\u002A))(.*)"; // ;
+        private static readonly string TextRegex = @"(""|')[^']*(""|')";
+        // OPCODE_REG and below are initialized dynamically below.
+        private static readonly string RegexBoilerplate = @"(\b|\s)(?<{0}>{1})(\b|\s)";
+        private static readonly string Opcode = "OPCODE";
+        private static readonly string Data = "DATA";
+        private static readonly string Directive = "DIRECTIVE";
+        private static readonly string Elup = "ELUP";
+        private static string _opcodeRegex = "";
+        private static string _directiveRegex = "";
+        private static string _dataRegex = "";
+
         public static IEnumerable<SnapshotHelper> GetTokens(SnapshotSpan span)
         {
-            string strTempRegex; // temp var string
+            string TempRegex; // temp var string
             ITextSnapshotLine containingLine = span.Start.GetContainingLine();
             int curLoc = containingLine.Start.Position;
             string formattedLine = containingLine.GetText();
 
             int commentMatch = int.MaxValue;
-            Regex reg = new Regex(COMMENT_REG);
+            Regex reg = new Regex(CommentRegex);
             foreach (Match match in reg.Matches(formattedLine))
             {
                 commentMatch = match.Index < commentMatch ? match.Index : commentMatch;
                 yield return new SnapshotHelper(new SnapshotSpan(new SnapshotPoint(span.Snapshot, match.Index + curLoc), match.Length), Merlin32TokenTypes.Merlin32Comment);
             }
 
-            reg = new Regex(TEXT_REG);
+            reg = new Regex(TextRegex);
             foreach (Match match in reg.Matches(formattedLine))
             {
                 if (match.Index < commentMatch)
@@ -39,55 +44,83 @@ namespace VSMerlin32.Coloring
 
             // OG NEW
             // OPCODES
-            strTempRegex = "";
+            TempRegex = "";
             foreach (Merlin32Opcodes token in Enum.GetValues(typeof(Merlin32Opcodes)))
             {
-                strTempRegex += (token.ToString() + ("|"));
+                TempRegex += token.ToString() + ("|");
             }
             // we remove the last "|" added
-            strTempRegex = strTempRegex.Remove(strTempRegex.LastIndexOf("|"));
-            OPCODE_REG = string.Format(@"\b({0})\b", strTempRegex);
+            TempRegex = TempRegex.Remove(TempRegex.LastIndexOf("|", StringComparison.Ordinal));
+            _opcodeRegex = string.Format(RegexBoilerplate, Opcode, TempRegex);
 
-            reg = new Regex(OPCODE_REG,RegexOptions.IgnoreCase);
-            foreach (Match match in reg.Matches(formattedLine))
+            reg = new Regex(_opcodeRegex,RegexOptions.IgnoreCase);
+            Match opcodeMatch = reg.Match(formattedLine);
+            if (opcodeMatch.Success)
             {
-                if (match.Index < commentMatch)
-                    yield return new SnapshotHelper(new SnapshotSpan(new SnapshotPoint(span.Snapshot, match.Index + curLoc), match.Length), Merlin32TokenTypes.Merlin32Opcode);
+                foreach (Capture opcode in opcodeMatch.Groups[Opcode].Captures)
+                {
+                    // An opcode after within a comment doesn't get a SnapShotSpan...
+                    if (opcode.Index < commentMatch)
+                        yield return new SnapshotHelper(new SnapshotSpan(new SnapshotPoint(span.Snapshot, opcode.Index + curLoc), opcode.Length), Merlin32TokenTypes.Merlin32Opcode);
+                }
             }
 
             // OG NEW
             // DIRECTIVES
-            strTempRegex = "";
+            TempRegex = "";
+            string elupDirective = Resources.directives.ELUP;
             foreach (Merlin32Directives token in Enum.GetValues(typeof(Merlin32Directives)))
             {
-                if (token.ToString() != Resources.directives.ELUP)
-                    strTempRegex += (token.ToString() + ("|"));
+                if (token.ToString() != elupDirective)
+                    TempRegex += token.ToString() + ("|");
             }
-            DIRECTIVE_REG = string.Format(@"\b({0})\b|{1}", strTempRegex, Resources.directives.ELUPRegex);
+            // we remove the last "|" added
+            TempRegex = TempRegex.Remove(TempRegex.LastIndexOf("|", StringComparison.Ordinal));
+            _directiveRegex = string.Format(RegexBoilerplate, Directive, TempRegex);
 
-            reg = new Regex(DIRECTIVE_REG, RegexOptions.IgnoreCase);
-            foreach (Match match in reg.Matches(formattedLine))
+            reg = new Regex(_directiveRegex, RegexOptions.IgnoreCase);
+            Match directiveMatch = reg.Match(formattedLine);
+            if (directiveMatch.Success)
             {
-                if (match.Index < commentMatch)
-                    yield return new SnapshotHelper(new SnapshotSpan(new SnapshotPoint(span.Snapshot, match.Index + curLoc), match.Length), Merlin32TokenTypes.Merlin32Directive);
+                foreach (Capture directive in directiveMatch.Groups[Directive].Captures)
+                {
+                    if (directive.Index < commentMatch)
+                        yield return new SnapshotHelper(new SnapshotSpan(new SnapshotPoint(span.Snapshot, directive.Index + curLoc), directive.Length), Merlin32TokenTypes.Merlin32Directive);
+                }
+            }
+
+            // We also need to check for special ELUP directive...
+            reg = new Regex(Resources.directives.ELUPRegex);
+            Match elupMatch = reg.Match(formattedLine);
+            if (elupMatch.Success)
+            {
+                foreach (Capture elup in elupMatch.Groups[Elup].Captures)
+                {
+                    if (elup.Index < commentMatch)
+                        yield return new SnapshotHelper(new SnapshotSpan(new SnapshotPoint(span.Snapshot, elup.Index + curLoc), elup.Length), Merlin32TokenTypes.Merlin32Directive);
+                }
             }
 
             // OG NEW
             // DATADEFINES
-            strTempRegex = "";
+            TempRegex = "";
             foreach (Merlin32DataDefines token in Enum.GetValues(typeof(Merlin32DataDefines)))
             {
-                strTempRegex += (token.ToString() + ("|"));
+                TempRegex += token.ToString() + ("|");
             }
             // we remove the last "|" added
-            strTempRegex = strTempRegex.Remove(strTempRegex.LastIndexOf("|"));
-            DATADEFINE_REG = string.Format(@"\b({0})\b", strTempRegex);
+            TempRegex = TempRegex.Remove(TempRegex.LastIndexOf("|", StringComparison.Ordinal));
+            _dataRegex = string.Format(RegexBoilerplate, Data, TempRegex);
 
-            reg = new Regex(DATADEFINE_REG, RegexOptions.IgnoreCase);
-            foreach (Match match in reg.Matches(formattedLine))
+            reg = new Regex(_dataRegex, RegexOptions.IgnoreCase);
+            Match dataMatch = reg.Match(formattedLine);
+            if (dataMatch.Success)
             {
-                if (match.Index < commentMatch)
-                    yield return new SnapshotHelper(new SnapshotSpan(new SnapshotPoint(span.Snapshot, match.Index + curLoc), match.Length), Merlin32TokenTypes.Merlin32DataDefine);
+                foreach (Capture data in dataMatch.Groups[Data].Captures)
+                {
+                    if (data.Index < commentMatch)
+                        yield return new SnapshotHelper(new SnapshotSpan(new SnapshotPoint(span.Snapshot, data.Index + curLoc), data.Length), Merlin32TokenTypes.Merlin32DataDefine);
+                }
             }
         }
     }

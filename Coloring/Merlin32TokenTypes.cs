@@ -1,11 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Resources;
-using System.Reflection;
-using System.Collections;
 
 namespace VSMerlin32
 {
@@ -51,7 +46,7 @@ namespace VSMerlin32
         DA, DW, DDB, DFB, DB, ADR, ADRL, HEX, DS, 
         DC, DE,   /* ? */
         ASC, DCI, INV, FLS, REV, STR, STRL, 
-        CHK 
+        CHK
     }
 
     class Merlin32KeywordsHelper
@@ -85,7 +80,7 @@ namespace VSMerlin32
             foreach (Merlin32DataDefines token in Enum.GetValues(typeof(Merlin32DataDefines)))
             {
                 _Merlin32KeywordsQuickInfo[token.ToString()] = rsData.GetString(token.ToString());
-            }   
+            }
             /*
             _Merlin32OpcodesQuickInfo[Merlin32Opcodes.ORG.ToString()] = VSMerlin32.strings.ORG;
             */
