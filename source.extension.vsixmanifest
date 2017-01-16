@@ -11,7 +11,7 @@
 //***************************************************************************-->
 <PackageManifest Version="2.0.0" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011">
   <Metadata>
-    <Identity Id="Merlin32Language..c729d6b2-f512-49ed-893d-a8f61f25db98" Version="1.0" Language="en-US" Publisher="Olivier Guinart" />
+    <Identity Id="Merlin32Language..c729d6b2-f512-49ed-893d-a8f61f25db98" Version="1.1" Language="en-US" Publisher="Olivier Guinart" />
     <DisplayName>Merlin32 Language Service</DisplayName>
     <Description xml:space="preserve">Merlin32 classifier extension to the Visual Studio Editor.</Description>
     <MoreInfo>http://www.brutaldeluxe.fr/products/crossdevtools/merlin/</MoreInfo>
