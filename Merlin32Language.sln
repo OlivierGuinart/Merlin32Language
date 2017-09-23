@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Merlin32Language", "Merlin32Language.csproj", "{F091221E-FD10-41A7-AAC4-C9359178BDB1}"
 EndProject
@@ -20,12 +20,7 @@ Global
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 2
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = https://aito.visualstudio.com/
-		SccLocalPath0 = .
-		SccProjectUniqueName1 = Merlin32Language.csproj
-		SccLocalPath1 = .
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9D218EEF-2353-4C46-A1B0-E20B193CFF70}
 	EndGlobalSection
 EndGlobal
