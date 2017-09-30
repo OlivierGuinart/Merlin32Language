@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using Microsoft.VisualStudio.Language.StandardClassification;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Text.Tagging;
@@ -52,8 +53,11 @@ namespace VSMerlin32.Coloring.Classification
             _aggregator = merlin32TagAggregator;
             _merlin32Types = new Dictionary<Merlin32TokenTypes, IClassificationType>();
 
-            foreach (Merlin32TokenTypes token in Enum.GetValues(typeof(Merlin32TokenTypes)))
-                _merlin32Types[token] = typeService.GetClassificationType(token.ToString());
+			_merlin32Types[Merlin32TokenTypes.Merlin32Comment] = typeService.GetClassificationType(PredefinedClassificationTypeNames.Comment);
+			_merlin32Types[Merlin32TokenTypes.Merlin32Text] = typeService.GetClassificationType(PredefinedClassificationTypeNames.String);
+			_merlin32Types[Merlin32TokenTypes.Merlin32Opcode] = typeService.GetClassificationType(PredefinedClassificationTypeNames.Keyword);
+			_merlin32Types[Merlin32TokenTypes.Merlin32DataDefine] = typeService.GetClassificationType(PredefinedClassificationTypeNames.SymbolDefinition);
+			_merlin32Types[Merlin32TokenTypes.Merlin32Directive] = typeService.GetClassificationType(PredefinedClassificationTypeNames.Operator);
         }
 
         public event EventHandler<SnapshotSpanEventArgs> TagsChanged
