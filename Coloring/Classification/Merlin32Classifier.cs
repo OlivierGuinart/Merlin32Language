@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.Composition;
-using Microsoft.VisualStudio.Text;
+﻿using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Text.Tagging;
 using Microsoft.VisualStudio.Utilities;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.Composition;
 
 namespace VSMerlin32.Coloring.Classification
 {
@@ -53,7 +53,9 @@ namespace VSMerlin32.Coloring.Classification
             _merlin32Types = new Dictionary<Merlin32TokenTypes, IClassificationType>();
 
             foreach (Merlin32TokenTypes token in Enum.GetValues(typeof(Merlin32TokenTypes)))
+            {
                 _merlin32Types[token] = typeService.GetClassificationType(token.ToString());
+            }
         }
 
         public event EventHandler<SnapshotSpanEventArgs> TagsChanged

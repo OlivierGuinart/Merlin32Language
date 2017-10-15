@@ -13,6 +13,7 @@ namespace VSMerlin32.Coloring.Classification
         /// </summary>
         [Export(typeof(ClassificationTypeDefinition))]
         [Name(Merlin32TokenHelper.Merlin32Opcode)]
+        [BaseDefinition("Keyword")]
         internal static ClassificationTypeDefinition Opcode = null;
 
         /// <summary>
@@ -20,6 +21,7 @@ namespace VSMerlin32.Coloring.Classification
         /// </summary>
         [Export(typeof(ClassificationTypeDefinition))]
         [Name(Merlin32TokenHelper.Merlin32Directive)]
+        [BaseDefinition("Symbol Definition")]
         internal static ClassificationTypeDefinition Directive = null;
 
         /// <summary>
@@ -27,6 +29,7 @@ namespace VSMerlin32.Coloring.Classification
         /// </summary>
         [Export(typeof(ClassificationTypeDefinition))]
         [Name(Merlin32TokenHelper.Merlin32DataDefine)]
+        [BaseDefinition("Preprocessor Keyword")]
         internal static ClassificationTypeDefinition Datadefine = null;
 
         /// <summary>
@@ -34,6 +37,7 @@ namespace VSMerlin32.Coloring.Classification
         /// </summary>
         [Export(typeof(ClassificationTypeDefinition))]
         [Name(Merlin32TokenHelper.Merlin32Text)]
+        [BaseDefinition("String")]
         internal static ClassificationTypeDefinition Text = null;
 
         /// <summary>
@@ -41,6 +45,7 @@ namespace VSMerlin32.Coloring.Classification
         /// </summary>
         [Export(typeof(ClassificationTypeDefinition))]
         [Name(Merlin32TokenHelper.Merlin32Comment)]
+        [BaseDefinition("Comment")]
         internal static ClassificationTypeDefinition Comment = null;
 
         #endregion

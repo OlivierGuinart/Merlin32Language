@@ -139,7 +139,7 @@
     <Compile Include="Coloring\Merlin32TokenTypes.cs" />
     <Compile Include="Coloring\Merlin32TokenTag.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Coloring\Classification\Merlin32sClassifier.cs" />
+    <Compile Include="Coloring\Classification\Merlin32Classifier.cs" />
     <Compile Include="Intellisense\QuickInfoController.cs" />
     <Compile Include="Intellisense\QuickInfoControllerProvider.cs" />
     <Compile Include="Resources\opcodes.Designer.cs">
